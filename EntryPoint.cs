@@ -117,7 +117,7 @@ namespace RAGEplus
         private static void OnRawFrameRender(object sender, GraphicsEventArgs e)
         {
             if (fpsDisplay.Enabled) {
-                if (Game.TickCount % 10 == 0) {
+                if (Game.TickCount.LastNth(3) == 0) {
                     fpsDisplay.Peds = World.GetAllPeds().Length;
                     fpsDisplay.Vehicles = World.GetAllVehicles().Length;
                     fpsDisplay.Objects = World.GetAllObjects().Length;

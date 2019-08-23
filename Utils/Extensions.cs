@@ -61,8 +61,10 @@ namespace RAGEplus
         public static object ToJson(this object obj, bool indented = true) {
             return JsonConvert.SerializeObject(obj, (indented ? Formatting.Indented : Formatting.None), new JsonConverter[] { new StringEnumConverter() });
         }
-#endregion
- #region String
+        #endregion
+        #region String
+        public static ushort LastNth(this ulong ulo, int nth) => Convert.ToUInt16(ulo.ToString().LastNth(nth));
+        public static string LastNth(this string str, int nth) => str.ToCharArray().LastNth(nth).ToString();
         public static bool Contains(this string source, string toCheck, StringComparison comp)
         {
             return source?.IndexOf(toCheck, comp) >= 0;
@@ -121,6 +123,24 @@ namespace RAGEplus
         }
         #endregion
         #region List
+        public static T LastNth<T>(this IEnumerable<T> items, int nth)
+        {
+            if (items == null) throw new ArgumentNullException("items");
+            IList<T> list = items as IList<T>;
+            if (list != null)
+            {
+                int count = list.Count;
+                if (count > (nth - 1)) {
+                    return list[count - nth];
+                } else throw new ArgumentException("Sequence must contain at least two elements.", "items");
+            } else {
+                try {
+                    return items.Reverse().Skip(nth-1).First();
+                } catch (InvalidOperationException) {
+                    throw new ArgumentException("Sequence must contain at least two elements.", "items");
+                }
+            }
+        }
         public static string Join(this string[] list, string seperator) =>  string.Join(seperator, list);
         public static string ToQueryString(this NameValueCollection nvc)
         {
